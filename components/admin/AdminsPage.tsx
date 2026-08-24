@@ -81,7 +81,7 @@ export const AdminsPage = ({ currentEmail, onBack }: { currentEmail: string; onB
     </div>
 
     <form onSubmit={submit} className="mt-6 grid gap-3 border border-slate-200 bg-white p-5 shadow-sm sm:grid-cols-[minmax(0,1fr)_auto]">
-      <input value={nextEmail} onChange={(event) => setNextEmail(event.target.value)} type="email" placeholder="admin@example.com" className="h-11 border border-slate-200 px-3 text-sm outline-none focus:border-indigo-500" />
+      <input value={nextEmail} onChange={(event) => setNextEmail(event.target.value)} type="email" className="h-11 border border-slate-200 px-3 text-sm outline-none focus:border-indigo-500" />
       <button disabled={saving || !nextEmail.trim()} className={`${buttonClass} border-indigo-600 bg-indigo-600 text-white`}>{saving ? '追加中...' : '+ 管理者を追加'}</button>
     </form>
 

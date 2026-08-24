@@ -13,3 +13,4 @@ export type AdminResearch = { id: string; title: string; description: string; im
 export type AdminProject = { id: string; title: string; description: string; tech: string[]; image_path: string; link_url: string; display_order: number; is_published: boolean; updated_at: string };
 export type AdminQualification = { id: string; name: string; label: string; date_label: string; display_order: number; is_published: boolean; updated_at: string };
 export type AdminRecord = AdminNews | AdminEducationWork | AdminResearch | AdminProject | AdminQualification;
+export type AdminUser = { email: string; created_at: string };
