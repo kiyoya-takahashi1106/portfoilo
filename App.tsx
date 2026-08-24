@@ -5,8 +5,12 @@ import Hero from './components/Hero';
 import EducationWork from './components/EducationWork';
 import Others from './components/Others';
 import { usePortfolio } from './hooks/usePortfolio';
+import AdminCMS from './components/AdminCMS';
 
 const App: React.FC = () => {
+  if (window.location.pathname.startsWith('/admin')) {
+    return <AdminCMS />;
+  }
   const [activeSection, setActiveSection] = useState('home');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { data: profileData, error, isLoading } = usePortfolio();
