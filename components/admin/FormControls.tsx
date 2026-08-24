@@ -1,0 +1,22 @@
+import React, { ChangeEvent, ReactNode, useRef } from 'react';
+import { getPublicAssetUrl } from '../../services/storageService';
+
+export const Field = ({ label, required, children }: { label: string; required?: boolean; children: ReactNode }) => <label className="block text-sm font-semibold text-slate-800"><span>{label}{required && <span className="ml-1 text-rose-500">*</span>}</span><div className="mt-2">{children}</div></label>;
+
+export const inputClass = 'h-11 w-full border border-slate-200 bg-white px-3 text-sm outline-none transition focus:border-indigo-500';
+export const textareaClass = 'w-full border border-slate-200 bg-white p-3 text-sm leading-relaxed outline-none transition focus:border-indigo-500';
+
+export const Toggle = ({ value, onChange }: { value: boolean; onChange: (value: boolean) => void }) => <button type="button" role="switch" aria-checked={value} onClick={() => onChange(!value)} className={`relative h-6 w-11 rounded-full transition ${value ? 'bg-emerald-500' : 'bg-slate-300'}`}><span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${value ? 'translate-x-5' : 'translate-x-0.5'}`} /></button>;
+
+export const TagEditor = ({ label, values, onChange, placeholder }: { label: string; values: string[]; onChange: (values: string[]) => void; placeholder: string }) => {
+  const input = useRef<HTMLInputElement>(null);
+  const add = () => { const value = input.current?.value.trim(); if (value && !values.includes(value)) onChange([...values, value]); if (input.current) input.current.value = ''; };
+  return <div><span className="text-sm font-semibold text-slate-800">{label}</span><div className="mt-2 flex flex-wrap gap-2">{values.map((value) => <span key={value} className="inline-flex h-9 items-center gap-2 border border-slate-200 bg-slate-50 px-3 text-sm text-slate-600">{value}<button type="button" aria-label={`${value}を削除`} onClick={() => onChange(values.filter((entry) => entry !== value))}>x</button></span>)}<input ref={input} onKeyDown={(event) => { if (event.key === 'Enter') { event.preventDefault(); add(); } }} className="h-9 w-36 border border-slate-200 px-2 text-sm outline-none focus:border-indigo-500" placeholder={placeholder} /><button type="button" onClick={add} className="h-9 border border-indigo-300 px-3 text-sm font-semibold text-indigo-500 hover:bg-indigo-50">+ 追加</button></div></div>;
+};
+
+export const ImageField = ({ label, path, preview, onSelect }: { label: string; path: string; preview?: string; onSelect: (file: File) => void }) => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => { const file = event.target.files?.[0]; if (file) onSelect(file); };
+  return <section className="border border-slate-200 bg-white p-5 shadow-sm"><h2 className="font-bold text-slate-950">{label}</h2><div className="mt-4 flex aspect-[16/9] items-center justify-center overflow-hidden border border-slate-200 bg-slate-50">{preview || path ? <img src={preview || getPublicAssetUrl(path)} alt="画像プレビュー" className="h-full w-full object-cover" /> : <span className="text-sm text-slate-400">画像がありません</span>}</div><label className="mt-4 flex h-11 cursor-pointer items-center justify-center border border-indigo-400 text-sm font-semibold text-indigo-500 hover:bg-indigo-50">画像を変更<input type="file" accept="image/jpeg,image/png,image/webp" onChange={onChange} className="sr-only" /></label></section>;
+};
+
+export const StatusFields = ({ published, onPublished, current, onCurrent, order, onOrder, showCurrent = false }: { published: boolean; onPublished: (value: boolean) => void; current?: boolean; onCurrent?: (value: boolean) => void; order: number; onOrder: (value: number) => void; showCurrent?: boolean }) => <div className="grid gap-5 md:grid-cols-3"><div className="text-sm font-semibold text-slate-800">公開状態<div className="mt-2 flex h-11 items-center justify-between border border-slate-200 px-3"><span className="text-sm font-normal">{published ? '公開' : '非公開'}</span><Toggle value={published} onChange={onPublished} /></div></div>{showCurrent && <div className="text-sm font-semibold text-slate-800">Current<div className="mt-2 flex h-11 items-center justify-between border border-slate-200 px-3"><span className="text-sm font-normal">{current ? '現在' : '設定しない'}</span><Toggle value={Boolean(current)} onChange={(value) => onCurrent?.(value)} /></div></div>}<Field label="Display Order"><input type="number" min="0" value={order} onChange={(event) => onOrder(Number(event.target.value))} className={inputClass} /></Field></div>;
